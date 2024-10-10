@@ -1,0 +1,164 @@
+\documentclass[a4paper,10pt,dvipdfmx]{jarticle}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{longtable} 
+\usepackage{setspace}
+\usepackage{latexsym}
+\usepackage{here}
+\usepackage{amsmath,amssymb}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[inline]{enumitem} 
+\usepackage{listings,jlisting} %日本語のコメントアウトをする場合jvlisting（もしくはjlisting）が必要
+%ここからソースコードの表示に関する設定。
+%//の後は空白開けないとコメントアウトが黒字になるので注意。
+\usepackage{listings, jlisting, color}
+\definecolor{OliveGreen}{rgb}{0.0,0.6,0.0}
+\definecolor{Orenge}{rgb}{0.89,0.55,0}
+\definecolor{SkyBlue}{rgb}{0.28, 0.28, 0.95}
+\lstset{
+  language={C}, % 言語の指定
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+   breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex,
+  keywordstyle={\color{SkyBlue}},     %キーワード(int, ifなど)の書体指定
+  commentstyle={\color{OliveGreen}},  %注釈の書体
+  stringstyle=\color{Orenge}          %文字列
+}
+% 「%」は以降の内容を「改行コードも含めて」無視するコマンド
+\usepackage[%
+ dvipdfmx,% 欧文ではコメントアウトする
+ setpagesize=false,%
+ bookmarks=true,%
+ bookmarksdepth=tocdepth,%
+ bookmarksnumbered=true,%
+ colorlinks=false,%
+ pdftitle={},%
+ pdfsubject={},%
+ pdfauthor={},%
+ pdfkeywords={}%
+]{hyperref}
+% PDFのしおり機能の日本語文字化けを防ぐ((u)pLaTeXのときのみかく)
+\usepackage{pxjahyper}
+\setlength{\textwidth}{165mm} %165mm-marginparwidth
+\setlength{\marginparwidth}{40mm}
+\setlength{\textheight}{225mm}
+\setlength{\topmargin}{-5mm}
+\setlength{\oddsidemargin}{-3.5mm}
+\def\vector#1{\mbox{\boldmath $#1$}}
+\newcommand{\AmSLaTeX}{$\mathcal A$\lower.4ex\hbox{$\!\mathcal M\!$}$\mathcal S$-\LaTeX}
+\newcommand{\PS}{{\scshape Post\-Script}}
+\def\BibTeX{{\rmfamily B\kern-.05em{\scshape i\kern-.025em b}\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125em X}}
+\newcommand{\pderiv}[2]{{\partial#1\over\partial#2}}
+\newcommand{\deriv}[2]{{{\rm d}#1\over{\rm d}#2}}
+\newcommand{\dderiv}[2]{{{\rm d}^2#1\over{\rm d}#2^2}}
+\newcommand{\DeLta}{{\mit\Delta}}
+\newcommand{\ctext}[1]{\raise0.2ex\hbox{	extcircled{\scriptsize{#1}}}} %①みたいな文字を使える
+\renewcommand{\d}{{\rm d}}
+\def\wcaption#1{\caption[]{\parbox[t]{100mm}{#1}}}
+\def\rm#1{\mathrm{#1}}
+\def\tempC{^\circ \rm{C}}
+\makeatletter
+\def\section{\@startsection {section}{1}{\z@}{-3.5ex plus -1ex minus-.2ex}{2.3ex plus .2ex}{\normalsize\bf}}
+\makeatother
+\makeatletter
+\def\subsection{\@startsection {subsection}{1}{\z@}{-3.5ex plus -1ex minus-.2ex}{2.3ex plus .2ex}{\normalsize\bf}}
+\makeatother
+\makeatletter
+\def\@seccntformat#1{\@ifundefined{#1@cntformat} {\csname the#1\endcsname\quad} {\csname #1@cntformat\endcsname}}
+\makeatother
+\begin{document}
+\begin{center}
+{\Large{
+\bf QuantEcon 26を理解してみよう。
+\\
+}}
+{\bf 電気通信大学　 足立幸大 }
+
+{\bf 2023年9月19日作成}　\\
+\end{center}
+quantecon::::\href{https://python-advanced.quantecon.org/robustness.html}{link}
+\begin{equation}
+    \begin{gathered}
+    \max _w\left\{(A x+B u+C w)^{\prime} P(A x+B u+C w)-\theta w^{\prime} w\right\} \\
+    =(A x+B u)^{\prime} \mathcal{D}(P)(A x+B u)
+    \end{gathered}
+    \end{equation}
+    を導いてみよう。
+    \begin{equation}
+        J(w)=(A x+B u+C w)^{\prime} P(A x+B u+C w)-\theta w^{\prime} w
+        \end{equation}として、両辺を微分してみる。
+        \begin{equation}
+            \frac{\partial J(w)}{\partial w}=2 C^{\prime} P(A x+B u+C w)-2 \theta w
+            \end{equation}
+
+$ \frac{\partial J(w)}{\partial w}=0$で最大化する$w$が分かるので、
+\begin{align}
+    2 C^{\prime} P(A x+B u+C w)-2 \theta w&=0 \\
+    \theta w-C^{\prime} P Cw&=C^{\prime}P(Ax+Bu) \\
+    w^*&=\left(\theta I-C^{\prime} P C\right){ }^{-1} C^{\prime} P(A x+B u)
+\end{align}
+
+これを$J$に入れて計算しなおすと、
+
+\begin{align}
+    J\left(w^*\right)&=(A x+B u)^{\prime}\left[P+P C \theta\left(I-C^{\prime} P C\right)^{-1} C^{\prime} P\right](A x+B u) \\
+    &= (A x+B u)^{\prime} \mathcal{D}(P)(A x+B u) \ \ \ \ \ \ \ \ \ \ (但し\mathcal{D}(P):=P+P C\left(\theta I-C^{\prime} P C\right)^{-1} C^{\prime} P)
+    \end{align}
+
+導出できた。
+従ってそもそものベルマン方程式は以下の様に書き直すことができる。
+\begin{equation}
+    x^{\prime} P x=\min _u\left\{x^{\prime} R x+u^{\prime} Q u+\beta(A x+B u)^{\prime} \mathcal{D}(P)(A x+B u)\right\}
+    \end{equation}
+よって最適レギュレータは$F:=\left(Q+\beta B^{\prime} \mathcal{D}(P) B\right)^{-1} \beta B^{\prime} \mathcal{D}(P) A$
+\\ これをベルマン方程式に入れて整理すると、$x^{\prime} P x=x^{\prime} \mathcal{B}(\mathcal{D}(P)) x$を得る。
+where,\begin{equation}
+    \mathcal{B}(P):=R-\beta^2 A^{\prime} P B\left(Q+\beta B^{\prime} P B\right)^{-1} B^{\prime} P A+\beta A^{\prime} P A
+    \end{equation}
+    Under some regularity conditions、$\mathcal{B} \circ \mathcal{D}$はa unique positive definite fixed pointを持つらしい。\\
+    その時のpointを$\hat{P}$とすると、
+    \begin{equation}
+        \hat{F}:=\left(Q+\beta B^{\prime} \mathcal{D}(\hat{P}) B\right)^{-1} \beta B^{\prime} \mathcal{D}(\hat{P}) A
+        \end{equation}
+        \begin{equation}
+            \hat{K}:=\left(\theta I-C^{\prime} \hat{P} C\right)^{-1} C^{\prime} \hat{P}(A-B \hat{F})
+            \end{equation}
+            これは
+\begin{align}
+    Ax+Bu&=Ax-BFx \\
+    &=(A-B\hat{F})x
+\end{align}
+
+より分かる。
+
+
+Note also that if $\theta$ is very large($\sigma$がめっちゃ小さい), then $\mathcal{D}$ is approximately equal to the identity mapping.
+Hence, when $\theta$ is large, $\hat{P}$ and $\hat{F}$ are approximately equal to their standard LQ values.
+Furthermore, when $\theta$ is large, $\hat{K}$ is approximately equal to zero.(所得が正確に予測できているということ)
+Conversely, smaller $\theta$ is associated with greater fear of model misspecification and greater concern for robustness.
+
+
+
+
+
+
+
+
+
+\end{document}
+
